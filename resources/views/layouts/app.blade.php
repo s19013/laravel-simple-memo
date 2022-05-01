@@ -89,9 +89,14 @@
                 </div>
                 <div class="col-md-4 p-0">
                     <div class="card">
-                        <div class="card-header">中央</div>
-                        <div class="card-body">
-                          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <div class="card-header">メモ一覧</div>
+                        <div class="card-body d-block">
+                            @foreach ($memos as $memo)
+                            <a class="card-text" href="">
+                                {{$memo['content']}}
+                            </a>
+                            @endforeach
+
                         </div>
                       </div>
                 </div>
