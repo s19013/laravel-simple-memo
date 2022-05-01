@@ -76,8 +76,21 @@
             </div>
         </nav>
 
+        {{-- bootstrapを使う--}}
         <main class="py-4">
-            @yield('content')
+            <div class="row">
+                <div class="col-md-2">
+                    左
+                </div>
+                <div class="col-md-4">
+                    中央
+                </div>
+                <div class="col-md-6">
+                    右
+                    @yield('content')
+                </div>
+
+            </div>
         </main>
     </div>
 </body>
