@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">新規メモ作成</div>
-    <form class="card-body" action="/store" method="POST">
+    <form class="card-body" action="{{route('store')}}" method="POST">
         @csrf
         <div class="form-floating p-1">
             <textarea class="form-control" placeholder="Leave a comment here" rows="3" name="content"></textarea>
