@@ -77,16 +77,26 @@
         </nav>
 
         {{-- bootstrapを使う--}}
-        <main class="py-4">
+        <main>
             <div class="row">
-                <div class="col-md-2">
-                    左
+                <div class="col-md-2 p-0">
+                    <div class="card">
+                        <div class="card-header">左</div>
+                        <div class="card-body">
+                          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        </div>
+                      </div>
                 </div>
-                <div class="col-md-4">
-                    中央
+                <div class="col-md-4 p-0">
+                    <div class="card">
+                        <div class="card-header">中央</div>
+                        <div class="card-body">
+                          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        </div>
+                      </div>
                 </div>
-                <div class="col-md-6">
-                    右
+                <div class="col-md-6 p-0">
+
                     @yield('content')
                 </div>
 
