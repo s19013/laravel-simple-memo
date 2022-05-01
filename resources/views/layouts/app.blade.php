@@ -90,9 +90,9 @@
                 <div class="col-md-4 p-0">
                     <div class="card">
                         <div class="card-header">メモ一覧</div>
-                        <div class="card-body d-block">
+                        <div class="card-body">
                             @foreach ($memos as $memo)
-                            <a class="card-text" href="">
+                            <a class="card-text d-block" href="/edit/{{$memo['id']}}">
                                 {{$memo['content']}}
                             </a>
                             @endforeach
