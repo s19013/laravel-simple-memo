@@ -1,4 +1,7 @@
-@extends('layouts.app')
+{{-- extendsを使うと指定したファイルを親ビューにできる --}}
+{{-- そしてこのphpは子ビューになる --}}
+{{-- .app を.authに変更 --}}
+@extends('layouts.auth')
 
 @section('content')
 <div class="container">
