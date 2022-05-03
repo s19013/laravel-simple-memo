@@ -64,6 +64,7 @@ class HomeController extends Controller
             $tag_exists = Tag::where('user_id','=',\Auth::id())
             ->where('name','=',$posts['new_tag'])
             ->exists();//existsでダブっていればtrue
+
             if (!empty($posts['new_tag']) && !$tag_exists) {
                  // 新規タグが既に存在しなければ、tagsテーブルにインサート→IDを取得
                 $tag_id = Tag::insertGetId(['user_id' => \Auth::id(),'name' => $posts['new_tag']]);
@@ -73,8 +74,6 @@ class HomeController extends Controller
         });
 
 
-
-        Memo::insert(['content' => $posts['content'], 'user_id' => \Auth::id()]);
         return redirect(route('home'));
     }
 
