@@ -59,7 +59,7 @@ class HomeController extends Controller
 
         // トランザクション
         DB::transaction(function() use($posts){
-            $memo = Memo::insertGetId(['content' => $posts['content'], 'user_id' => \Auth::id()]);
+            $memo_id = Memo::insertGetId(['content' => $posts['content'], 'user_id' => \Auth::id()]);
             // タグがだぶらないようにする
             $tag_exists = Tag::where('user_id','=',\Auth::id())
             ->where('name','=',$posts['new_tag'])
