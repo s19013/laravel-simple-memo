@@ -27,13 +27,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // このタイミングでメモを取得
-        $memos = Memo::select('memos.*')
-        ->Where('user_id','=',\Auth::id())
-        ->WhereNull('deleted_at')
-        ->orderBy('updated_at','DESC')
-        ->get();
-
         $tags = Tag::where('user_id','=',\Auth::id())
         ->where('deleted_at')
         ->orderBy('id','DESC')
@@ -41,18 +34,11 @@ class HomeController extends Controller
 
 
 
-        return view('create',compact('memos','tags'));
+        return view('create',compact('tags'));
     }
 
     public function edit($id)
     {
-        // このタイミングでメモ一覧を更新
-        $memos = Memo::select('memos.*')
-        ->Where('user_id','=',\Auth::id())
-        ->WhereNull('deleted_at')
-        ->orderBy('updated_at','DESC')
-        ->get();
-
         //編集するメモ
         //列名の衝突を避けるため別名を使う
         $edit_memo = Memo::select('memos.*','tags.id AS tag_id')
@@ -96,7 +82,9 @@ class HomeController extends Controller
         foreach ($edit_memo as $memo) {
             array_push($include_tags,$memo['tag_id']);
         }
-        return view('edit',compact('memos','edit_memo','include_tags','tags'));
+
+        dd($edit_memo);
+        return view('edit',compact('edit_memo','include_tags','tags'));
     }
 
     public function store(Request $request)
@@ -121,12 +109,16 @@ class HomeController extends Controller
 
             // 複数タグが紐付けられた場合 memo_tagsにインサート
 
-            //postsの中のtagsが空ではなかった場合memoTagを入れる
+            //postsの中のtagsが空だった場合memoTagのtag_idにnullを
+            //それ以外は選択したtagを紐づける
             if (!empty($posts['tags'][0])) {
                 foreach($posts['tags'] as $tag){
                     MemoTag::insert(['memo_id' => $memo_id,'tag_id' => $tag]);
                 }
             }
+            // else{
+            //     MemoTag::insert(['memo_id' => $memo_id,'tag_id' => 0]);
+            // }
         });
 
 
