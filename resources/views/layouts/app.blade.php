@@ -81,9 +81,16 @@
             <div class="row">
                 <div class="col-md-2 p-0">
                     <div class="card">
-                        <div class="card-header">左</div>
+                        <div class="card-header">タグ一覧</div>
                         <div class="card-body">
-                          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <a class="card-text d-block" href="/">
+                                すべて表示
+                            </a>
+                            @foreach ($tags as $tag)
+                            <a class="card-text d-block" href="/?tag={{$tag['id']}}">
+                                {{$tag['name']}}
+                            </a>
+                            @endforeach
                         </div>
                       </div>
                 </div>
@@ -96,7 +103,6 @@
                                 {{$memo['content']}}
                             </a>
                             @endforeach
-
                         </div>
                       </div>
                 </div>
