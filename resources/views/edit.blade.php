@@ -26,6 +26,9 @@
             </label>
         </div>
         @endforeach
+        @error('content')
+            <div class="alert alert-danger">メモを入力してください</div>
+        @enderror
         <input type="text" name="new_tag"  class="form-floating p-1 w-50 mb-3" placeholder="新しいタグ入力"><br>
         <button type="submit" class="btn btn-primary p-1">更新</button>
     </form>
