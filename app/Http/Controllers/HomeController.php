@@ -83,7 +83,6 @@ class HomeController extends Controller
             array_push($include_tags,$memo['tag_id']);
         }
 
-        dd($edit_memo);
         return view('edit',compact('edit_memo','include_tags','tags'));
     }
 
