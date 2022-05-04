@@ -46,17 +46,57 @@ class HomeController extends Controller
 
     public function edit($id)
     {
-        // このタイミングでメモを取得
+        // このタイミングでメモ一覧を更新
         $memos = Memo::select('memos.*')
         ->Where('user_id','=',\Auth::id())
         ->WhereNull('deleted_at')
         ->orderBy('updated_at','DESC')
         ->get();
 
-        // phpの変数はスネーク
-        $edit_memo = Memo::find($id);
+        //編集するメモ
+        //列名の衝突を避けるため別名を使う
+        $edit_memo = Memo::select('memos.*','tags.id AS tag_id')
+        ->leftJoin('memo_tags','memo_tags.memo_id','=','memos.id')
+        ->leftJoin('tags','memo_tags.tag_id','=','tags.id')
+        ->Where('memos.user_id','=',\Auth::id())
+        ->Where('memo_id','=',$id)
+        ->WhereNull('memos.deleted_at')
+        ->get();
 
-        return view('edit',compact('memos','edit_memo'));
+        // edit_memoの中身
+        // {
+        //  [id => ,
+        //  content => ,
+        //  user_id => ,
+        //  deleted_at => ,
+        //  updated_at => ,
+        //  created_at=> ,
+        //  tag_id=>]
+        //  ,
+        //  [id => ,
+        //  content => ,
+        //  user_id => ,
+        //  deleted_at => ,
+        //  updated_at => ,
+        //  created_at=> ,
+        //  tag_id=>]
+        // }
+        //:
+        //:
+
+
+        //データベースに保存されているタグの一覧
+        $tags = Tag::where('user_id','=',\Auth::id())
+        ->where('deleted_at')
+        ->orderBy('id','DESC')
+        ->get();
+
+        // memoについているタグを別の変数に保存して置く
+        $include_tags = [];
+        foreach ($edit_memo as $memo) {
+            array_push($include_tags,$memo['tag_id']);
+        }
+        return view('edit',compact('memos','edit_memo','include_tags','tags'));
     }
 
     public function store(Request $request)
@@ -81,7 +121,7 @@ class HomeController extends Controller
 
             // 複数タグが紐付けられた場合 memo_tagsにインサート
 
-            //postsの中のtagsが空ではなかった場合 memoTagを入れる
+            //postsの中のtagsが空ではなかった場合memoTagを入れる
             if (!empty($posts['tags'][0])) {
                 foreach($posts['tags'] as $tag){
                     MemoTag::insert(['memo_id' => $memo_id,'tag_id' => $tag]);
@@ -98,7 +138,39 @@ class HomeController extends Controller
         // $request変数の中にあるものをすべて$postsの中に入れる
         $posts=$request->all();
 
-        Memo::where('id',$posts['memo_id'])->update(['content' => $posts['content'], 'user_id' => \Auth::id()]);
+        DB::transaction(function() use($posts){
+            Memo::where('id',$posts['memo_id'])->update(['content' => $posts['content'], 'user_id' => \Auth::id()]);
+            //一度メモとタグの紐づけを解除する
+            // ここは物理削除
+            // 個人の予想ではあるが多分論理削除だと､データがいっぱいになってしまうから?
+            MemoTag::where('memo_id','=',$posts['memo_id'])
+            ->delete();
+
+            // そして､新規にまた紐づけする
+            foreach ($posts['tags'] as $tag){
+                MemoTag::insert(['memo_id' => $posts['memo_id'],'tag_id' => $tag]);
+            }
+
+            // タグがだぶらないようにする
+            $tag_exists = Tag::where('user_id','=',\Auth::id())
+            ->where('name','=',$posts['new_tag'])
+            ->exists();//existsでダブっていればtrue
+
+            if (!empty($posts['new_tag']) && !$tag_exists) {
+                // 新規タグが既に存在しなければ、tagsテーブルにインサート→IDを取得
+               $tag_id = Tag::insertGetId(['user_id' => \Auth::id(),'name' => $posts['new_tag']]);
+               // memo_tagsにインサートして、メモとタグを紐付ける
+               MemoTag::insert(['memo_id' => $posts['memo_id'],'tag_id' => $tag_id]);
+           }
+           //postsの中のtagsが空ではなかった場合memoTagを入れる
+           if (!empty($posts['tags'][0])) {
+            foreach($posts['tags'] as $tag){
+                MemoTag::insert(['memo_id' => $post['memo_id'],'tag_id' => $tag]);
+                }
+            }
+        });
+
+
         return redirect(route('home'));
     }
 
