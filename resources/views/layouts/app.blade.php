@@ -15,12 +15,13 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
+        {{-- fontawesome --}}
+        <script src="https://kit.fontawesome.com/8bf8d931cc.js" crossorigin="anonymous"></script>
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="/css/layout.css">
 
-    {{-- fontawesome --}}
-    <script src="https://kit.fontawesome.com/8bf8d931cc.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
     <div id="app">
@@ -84,8 +85,8 @@
             <div class="row">
                 <div class="col-md-2 p-0">
                     <div class="card">
-                        <div class="card-header">タグ一覧</div>
-                        <div class="card-body">
+                        <div class="card-header d-flex justify-content-between mb-2">タグ一覧</div>
+                        <div class="card-body my-card-body">
                             <a class="card-text d-block" href="/">
                                 すべて表示
                             </a>
@@ -99,11 +100,11 @@
                 </div>
                 <div class="col-md-4 p-0">
                     <div class="card">
-                        <div class="card-header">メモ一覧
+                        <div class="card-header d-flex justify-content-between">メモ一覧
                             <a href="{{route('home')}}"><i class="fa-solid fa-circle-plus"></i></a> </div>
-                        <div class="card-body">
+                        <div class="card-body my-card-body">
                             @foreach ($memos as $memo)
-                            <a class="card-text d-block" href="/edit/{{$memo['id']}}">
+                            <a class="card-text d-block mb-2 ellipsis" href="/edit/{{$memo['id']}}">
                                 {{$memo['content']}}
                             </a>
                             @endforeach

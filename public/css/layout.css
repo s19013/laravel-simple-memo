@@ -1,0 +1,18 @@
+.my-card-body{
+    /* カードヘッダーの高さ､ナビの高さを引いて 画面いっぱいに表示する */
+    /* 各々の高さは開発者用ツールを使えば良い */
+    height: calc(100vh - (55px + 48px));
+}
+
+.ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media screen and (max-width:768px) {
+    .my-card-body{
+        height: auto;/*必要な分の高さ*/
+        max-height: 50vh;/*どんなに高くても画面の半分まで*/
+    }
+}
