@@ -5,20 +5,21 @@
 @endsection
 @section('content')
 <div class="card">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-between">
         メモ編集
-        <form action="{{route('destroy')}}" method="post" class="card-body" id="delete-form">
+        <form action="{{route('destroy')}}" method="post" id="delete-form">
             @csrf
             <input type="hidden" name="memo_id" value="{{$edit_memo[0]['id']}}"/>
-            <i class="fa-solid fa-trash" onclick="deleteHandle(event);"></i>
+            <i class="fa-solid fa-trash mr-3" onclick="deleteHandle(event);"></i>
         </form>
     </div>
-    <form class="card-body" action="{{route('update')}}" method="POST">
+    <form class="card-body my-card-body" action="{{route('update')}}" method="POST">
         @csrf
         <input type="hidden" name="memo_id" value="{{$edit_memo[0]['id']}}">
         <div class="form-floating p-1">
             <textarea class="form-control" placeholder="Leave a comment here" rows="3" name="content">{{$edit_memo[0]['content']}}</textarea>
         </div>
+        <input class="form-check-input" type="hidden" name="tags[]">
         @foreach ($tags as $t)
         <div class="form-check">
             {{-- 今回っているtagのidがinclude_tagsの中にあれば checkedを書く --}}
