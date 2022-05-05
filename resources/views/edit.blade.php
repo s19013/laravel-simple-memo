@@ -19,6 +19,7 @@
         <div class="form-floating p-1">
             <textarea class="form-control" placeholder="Leave a comment here" rows="3" name="content">{{$edit_memo[0]['content']}}</textarea>
         </div>
+        <input class="form-check-input" type="hidden" name="tags[]">
         @foreach ($tags as $t)
         <div class="form-check">
             {{-- 今回っているtagのidがinclude_tagsの中にあれば checkedを書く --}}

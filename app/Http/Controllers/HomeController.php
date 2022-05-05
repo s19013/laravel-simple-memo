@@ -70,10 +70,9 @@ class HomeController extends Controller
         //:
         //:
 
-
         //データベースに保存されているタグの一覧
         $tags = Tag::where('user_id','=',\Auth::id())
-        ->where('deleted_at')
+        ->whereNull('deleted_at')
         ->orderBy('id','DESC')
         ->get();
 
@@ -111,14 +110,13 @@ class HomeController extends Controller
 
             //postsの中のtagsが空だった場合memoTagのtag_idにnullを
             //それ以外は選択したtagを紐づける
-            if (!empty($posts['tags'][0])) {
+            if(!empty($posts['tags'][0])){
                 foreach($posts['tags'] as $tag){
-                    MemoTag::insert(['memo_id' => $memo_id,'tag_id' => $tag]);
+                    MemoTag::insert(['memo_id' => $memo_id, 'tag_id' => $tag]);
                 }
+            } else if (empty($posts['new_tag'])) {
+                MemoTag::insert(['memo_id' => $memo_id, 'tag_id' => null]);
             }
-            // else{
-            //     MemoTag::insert(['memo_id' => $memo_id,'tag_id' => 0]);
-            // }
         });
 
 
@@ -132,13 +130,13 @@ class HomeController extends Controller
         $request->validate(['content' => 'required']);
 
         DB::transaction(function() use($posts){
-            Memo::where('id',$posts['memo_id'])->update(['content' => $posts['content'], 'user_id' => \Auth::id()]);
+            Memo::where('id',$posts['memo_id'])->update(['content' => $posts['content']]);
             //一度メモとタグの紐づけを解除する
             // ここは物理削除
             // 個人の予想ではあるが多分論理削除だと､データがいっぱいになってしまうから?
             MemoTag::where('memo_id','=',$posts['memo_id'])
             ->delete();
-
+            // dd($posts['tags']);
             // そして､新規にまた紐づけする
             foreach ($posts['tags'] as $tag){
                 MemoTag::insert(['memo_id' => $posts['memo_id'],'tag_id' => $tag]);
@@ -155,12 +153,6 @@ class HomeController extends Controller
                // memo_tagsにインサートして、メモとタグを紐付ける
                MemoTag::insert(['memo_id' => $posts['memo_id'],'tag_id' => $tag_id]);
            }
-           //postsの中のtagsが空ではなかった場合memoTagを入れる
-           if (!empty($posts['tags'][0])) {
-            foreach($posts['tags'] as $tag){
-                MemoTag::insert(['memo_id' => $post['memo_id'],'tag_id' => $tag]);
-                }
-            }
         });
 
 
