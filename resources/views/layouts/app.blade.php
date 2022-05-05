@@ -85,13 +85,13 @@
             <div class="row">
                 <div class="col-md-2 p-0">
                     <div class="card">
-                        <div class="card-header d-flex justify-content-between mb-2">タグ一覧</div>
-                        <div class="card-body my-card-body">
+                        <div class="card-header d-flex justify-content-between mb-2 pl-4">タグ一覧</div>
+                        <div class="card-body my-card-body pl-1">
                             <a class="card-text d-block" href="/">
                                 すべて表示
                             </a>
                             @foreach ($tags as $tag)
-                            <a class="card-text d-block" href="/?tag={{$tag['id']}}">
+                            <a class="card-text d-block pl-1" href="/?tag={{$tag['id']}}">
                                 {{$tag['name']}}
                             </a>
                             @endforeach
